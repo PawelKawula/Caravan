@@ -111,7 +111,7 @@ void Game::update(GLfloat dt)
 	//}
 	//cards[CardRanks::ACE][CardSuits::CLUBS].setPosition(cardPosition);
 	//cards.insert(cards[CardRanks::ACE][CardSuits::CLUBS]);
-	table->update(dt);
+	table->update(dt, renderer);
 }
 
 void Game::render()
@@ -121,7 +121,7 @@ void Game::render()
 	//	for (auto object : rank.second)
 	//		object.second.draw(renderer);
 	//}
-	table->render(renderer);
+	//table->render(renderer);
 }
 
 void Game::processInput(GLfloat dt)

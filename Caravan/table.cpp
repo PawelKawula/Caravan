@@ -85,6 +85,12 @@ void Table::Player::draw(SpriteRenderer * renderer)
 		
 }
 
+void Table::Player::drawColor(SpriteRenderer * renderer)
+{
+	for (auto card : cards)
+		card.drawColor(renderer);
+}
+
 //Table::Table(Game & game, Card & sampleCard)
 //{
 //	glm::vec2 sampleSize = sampleCard.getSize();
@@ -110,7 +116,7 @@ void Table::Player::draw(SpriteRenderer * renderer)
 //}
 
 Table::Table(int width, int height, double scale, Table::CardConstructor & constructor, int hand, std::string name1, std::string name2)
-	: hand(hand), width(width), height(height), scale(scale), cardConstructor(cardConstructor), players{Player(*this, name1), Player(*this, name2)}
+	: hand(hand), width(width), height(height), scale(scale), cardConstructor(constructor), players{Player(*this, name1), Player(*this, name2)}
 {
 	std::cout << "<!--Poczatek konstruktora--!>" << std::endl;
 	glm::vec2 position = glm::vec2(0.02 * this->width, 0.5 * (this->height - constructor.size.y * this->scale - this->height * 0.02));
@@ -145,6 +151,7 @@ Table::Table(int width, int height, double scale, Table::CardConstructor & const
 			//std::cout << card.valueEnumToString() << std::endl;
 		}
 	}
+	std::cout << "cardConsturcor size in table constructor: " <<  constructor.size.x << ", " << constructor.size.y << std::endl;
 	//std::random_shuffle(cards.begin(), cards.end());
 	this->newStack();
 	std::cout << "Koniec konstruktora" << std::endl;
@@ -185,6 +192,7 @@ void Table::tossCards()
 {
 	std::cout << "Poczatek tossCards()" << std::endl;
 	glm::vec2 cardSize = cardConstructor.size;
+	std::cout << "Rozmiar karty: " << cardConstructor.size.x << ", " << cardConstructor.size.y << std::endl;
 	for (int i = 0; i < hand; ++i)
 	{
 		//glm::vec2 position = glm::vec2(this->width * 0.02 + (cardSize.x + 10) * i, this->height * 0.02);
@@ -212,7 +220,7 @@ void Table::tossCards()
 		}
 		if (i < this->players[1].getHandSize())
 		{
-			position.y = this->height - cardSize.y - 0.02 * this->height;
+			position.y = this->height - cardSize.y - this->height * 0.02;
 			animation = &players[1].getCard(i);
 			animatedObjectsStack.push_back(std::pair<glm::vec2, Card*>(position, animation));
 		}
@@ -242,10 +250,14 @@ bool Table::passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit)
 		return false;
 }
 
-void Table::update(GLfloat dt)
+void Table::update(GLfloat dt, SpriteRenderer * renderer)
 {
 	//std::cout << "table.update()" << std::endl;
 	//std::cout << animatedObjectsStack.size() << std::endl;
+	cardStack.top().drawColor(renderer);
+	players[0].drawColor(renderer);
+	players[1].drawColor(renderer);
+
 	if (!this->animatedObjectsStack.empty())
 	{
 		std::pair<glm::vec2, Card*> animation = animatedObjectsStack.front();
@@ -257,7 +269,25 @@ void Table::update(GLfloat dt)
 			animatedObjectsStack.pop_front();
 		}
 	}
-	//std::cout << "cardStack size: " << cardStack.size() << std::endl;
+	cardStack.top().draw(renderer);
+
+	players[0].drawColor(renderer);
+	players[1].drawColor(renderer);
+	//std::cout << "players[0] hand size: " << players[0].getHandSize() << std::endl;
+
+	if (!animatedObjectsStack.empty())
+	{
+		std::list<std::pair<glm::vec2, Card*>>::iterator it = std::next(animatedObjectsStack.begin());
+		if (it != animatedObjectsStack.end())
+		{
+			it->second->drawColor(renderer);
+			//std::cout << *it->second << std::endl;
+			//std::cout << "next: " << it->second->valueEnumToString() << std::endl;
+		}
+		animatedObjectsStack.front().second->drawColor(renderer);
+		//std::cout << "front: " << animatedObjectsStack.front().second->valueEnumToString() << std::endl;
+		//std::cout << *animatedObjectsStack.front().second << std::endl;
+	}
 }
 
 void Table::render(SpriteRenderer * renderer)
@@ -265,23 +295,24 @@ void Table::render(SpriteRenderer * renderer)
 	//std::cout << "table.render()" << std::endl;
 	//std::cout << this->cardStack.top()->getPosition().x << ", " << this->cardStack.top()->getPosition().y << std::endl;
 	//std::cout << players[0].getCard(0)->getPosition().x << players[0].getCard(0)->getPosition().y << std::endl;
-	//cardStack.top().draw(renderer);
+	cardStack.top().draw(renderer);
 
-	//players[0].draw(renderer);
-	//players[1].draw(renderer);
+	players[0].draw(renderer);
+	players[1].draw(renderer);
 	//std::cout << "players[0] hand size: " << players[0].getHandSize() << std::endl;
 	
 	if (!animatedObjectsStack.empty())
 	{
-		std::list<std::pair<glm::vec2, Card*>>::iterator it = animatedObjectsStack.begin();
-		std::next(it);
+		std::list<std::pair<glm::vec2, Card*>>::iterator it = std::next(animatedObjectsStack.begin());
 		if (it != animatedObjectsStack.end())
 		{
-			it->second->drawColor(renderer);
-			std::cout << *it->second << std::endl;
+			it->second->draw(renderer);
+			//std::cout << *it->second << std::endl;
+			//std::cout << "next: " << it->second->valueEnumToString() << std::endl;
 		}
-		//animatedObjectsStack.front().second->draw(renderer);
-		std::cout << *animatedObjectsStack.front().second << std::endl;
+		animatedObjectsStack.front().second->draw(renderer);
+		//std::cout << "front: " << animatedObjectsStack.front().second->valueEnumToString() << std::endl;
+		//std::cout << *animatedObjectsStack.front().second << std::endl;
 	}
 		
 	//players[0].draw(renderer);

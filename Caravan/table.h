@@ -46,6 +46,7 @@ private:
 		Card& getCard(CardRanks rank, CardSuits suit);
 		Card& getCard(int index);
 		void draw(SpriteRenderer * renderer);
+		void drawColor(SpriteRenderer * renderer);
 	};
 	struct Slot
 	{
@@ -68,7 +69,7 @@ public:
 	void tossCards();
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
 
-	void update(GLfloat dt);
+	void update(GLfloat dt, SpriteRenderer * renderer);
 	void render(SpriteRenderer * renderer);
 };
 
