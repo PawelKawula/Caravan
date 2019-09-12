@@ -24,6 +24,9 @@ public:
 		glm::vec2 size;
 		Texture2D & sprite;
 	};
+	static const int RANKS_NUMBER = 13;
+	static const int SUITS_NUMBER = 4;
+	static const int PLAYERS_NUMBER = 2;
 private:
 	int hand;
 	int width;
@@ -45,6 +48,7 @@ private:
 		bool removeCard(CardRanks rank, CardSuits suit);
 		Card& getCard(CardRanks rank, CardSuits suit);
 		Card& getCard(int index);
+		std::vector<Card> & getHand();
 		void draw(SpriteRenderer * renderer);
 		void drawColor(SpriteRenderer * renderer);
 	};
@@ -52,14 +56,11 @@ private:
 	{
 
 	};
-	Player players[2];
+	Player players[PLAYERS_NUMBER];
 	std::map<CardRanks, std::map<CardSuits, Card>> cards;
 	std::stack<Card> cardStack;
 	std::list<std::pair<glm::vec2, Card*>> animatedObjectsStack;
 public:
-	static const int RANKS_NUMBER = 13;
-	static const int SUITS_NUMBER = 4;
-
 	Table(int width, int height, double scale,
 		CardConstructor & constructor, int hand,
 		std::string name1, std::string name2);
@@ -68,6 +69,7 @@ public:
 	bool tossTopCardFromStack(Player & player);
 	void tossCards();
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
+	std::vector<Card> & getPlayerCards(int i);
 
 	void update(GLfloat dt, SpriteRenderer * renderer);
 	void render(SpriteRenderer * renderer);

@@ -19,8 +19,9 @@
 #include "table.h"
 
 SpriteRenderer				*renderer;
-//MousePicker					*mousePicker;
+MousePicker					*mousePicker;
 Table						*table;
+extern GLFWwindow*			window;
 
 const int HAND_SIZE = 4;
 const float SCALE = 1;
@@ -42,6 +43,7 @@ void Game::init()
 
 	ResourceManager::getShader("sprite").Use().SetInteger("sprite", 0);
 	ResourceManager::getShader("sprite").SetMatrix4("projection", projection);
+	
 	renderer = new SpriteRenderer(ResourceManager::getShader("sprite"));
 	Table::CardConstructor cardConstructor = {
 		glm::vec2(2, 2),
@@ -51,7 +53,8 @@ void Game::init()
 	};
 	table = new Table(this->width, this->height, 1, cardConstructor, 4, "player1", "player2");
 	table->tossCards();
-
+	Card& firstCard = table->getPlayerCards(0)[0];
+	mousePicker = new MousePicker(this->width, this->height, firstCard, *table);
 	//glm::vec2 position = glm::vec2(0.02 * this->width, 0.5 * (this->height - cardConstructor.size.y * this->scale - this->height * 0.02));
 	//for (int i = 0; i < 13; ++i)
 	//{
@@ -126,4 +129,10 @@ void Game::render()
 
 void Game::processInput(GLfloat dt)
 {
+	double xpos, ypos;
+	if (this->keys[GLFW_KEY_SPACE])
+	{
+		glfwGetCursorPos(window, &xpos, &ypos);
+		mousePicker->clickEvent(xpos, ypos);
+	}
 }

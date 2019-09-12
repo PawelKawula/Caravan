@@ -10,6 +10,7 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
+GLFWwindow * window;
 Game caravan(WINDOW_WIDTH, WINDOW_HEIGHT, 1);
 extern std::map<CardRanks, std::map<CardSuits, Card>>	cards;
 
@@ -29,7 +30,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow * window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Caravan", nullptr, nullptr);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Caravan", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -60,11 +61,9 @@ int main()
 		caravan.processInput(deltaTime);
 		if (caravan.state == GameState::GAME_ACTIVE)
 		{
-			caravan.update(deltaTime);
-
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-
+			caravan.update(deltaTime);
 			caravan.render();
 		}
 		glfwSwapBuffers(window);
@@ -92,20 +91,5 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	//for (auto rank : cards)
-	//{
-	//	auto it = rank.second.rbegin();
-	//	for (it; it != rank.second.rend(); ++it)
-	//	{
-	//		glm::ivec2 position = it->second.getPosition();
-	//		glm::ivec2 size = it->second.getSize();
-	//		if (xpos >= position.x && xpos <= position.x + size.x && ypos >= position.y && ypos <= position.y + size.y && selected.rank != it->second.getRank() && selected.suit != it->second.getSuit())
-	//		{
-	//			std::cout << it->second << std::endl;
-	//			selected.rank = it->second.getRank();
-	//			selected.suit = it->second.getSuit();
-	//			break;
-	//		}
-	//	}
-	//}
+	
 }
