@@ -16,19 +16,17 @@ MousePicker::MousePicker(int scrWidth, int scrHeight, GameObject & selectedObj, 
 				id = 18 + 18 * rank;
 				break;
 			case 1:
-				id = 19 + 18 * rank + 255;
+				id = 19 + 18 * rank;
 				break;
 			case 2:
-				id = 20 + 18 * rank + 510;
+				id = 20 + 18 * rank;
 				break;
 			case 3:
-				id = 21 + 18 * rank + 765;
+				id = 21 + 18 * rank;
 				break;
 			}
 			std::cout << Card::RanksNamesEng[rank] << " " << Card::SuitsNamesEng[suit] << id << std::endl;
 			IDs[CardRanks(rank)][CardSuits(suit)] = id;
-			if (765 == id)
-				std::cout << "EUREKA!";
 		}
 	}
 }
@@ -57,29 +55,17 @@ bool MousePicker::checkSelection(Card & object)
 	glFlush();
 	glFinish();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	GLubyte data[3];
-	glReadPixels(position.x, resolution.y - position.y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
-	
-	CardSuits suit = object.getSuit();
-	CardRanks rank = object.getRank();
-	int id;
-	switch (suit)
-	{
-	case 0:
-		id = data[0] * 255;
-		break;
-	case 1:
-		id = data[1] * 255 + 255;
-		break;
-	case 2:
-		id = data[2] * 255 + 510;
-		break;
-	case 3:
-		id = data[0] * 255 + 765;
-		break;
-	}
-	std::cout << id << std::endl;
-	if (IDs[rank][suit] == id)
+	GLfloat data[3];
+	glReadPixels(position.x, resolution.y - position.y, 1, 1, GL_RGB, GL_FLOAT, data);
+	// TODO: zle przemyslane wywolywanie id powinienem spradziwc czy jakis kolor jset lub nie
+	int pickedId, objectId;
+	objectId = IDs[object.getRank()][object.getSuit()];
+	if (data[0] != 0 && data[1] != 0)
+		pickedId = data[0] * 255;
+	else
+		pickedId = data[0] * 255 + data[1] * 255 + data[2] * 255;
+	std::cout << "pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
+	if (pickedId == objectId)
 	{
 		std::cout << "Wybrales: " << object.valueEnumToString() << std::endl;
 		return true;

@@ -71,7 +71,8 @@ public:
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
 	std::vector<Card> & getPlayerCards(int i);
 
-	void update(GLfloat dt, SpriteRenderer * renderer);
+	void processInput(GLfloat dt, SpriteRenderer * renderer);
+	void update(GLfloat dt);
 	void render(SpriteRenderer * renderer);
 };
 
