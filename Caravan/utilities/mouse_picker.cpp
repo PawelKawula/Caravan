@@ -57,14 +57,17 @@ bool MousePicker::checkSelection(Card & object)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	GLfloat data[3];
 	glReadPixels(position.x, resolution.y - position.y, 1, 1, GL_RGB, GL_FLOAT, data);
-	// TODO: zle przemyslane wywolywanie id powinienem spradziwc czy jakis kolor jset lub nie
+	// TODO: Wybiera dobrze tylko clubs ktore jest na czerwonych
 	int pickedId, objectId;
 	objectId = IDs[object.getRank()][object.getSuit()];
-	if (data[0] != 0 && data[1] != 0)
-		pickedId = data[0] * 255;
-	else
-		pickedId = data[0] * 255 + data[1] * 255 + data[2] * 255;
-	std::cout << "pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
+	pickedId = data[0] * 255;
+	if (data[0] != 0 & data[1] != 0 && data[2] != 0)
+		pickedId = pickedId - 1;
+	else if (data[1] != 0)
+		pickedId = data[1] * 255 + 2;
+	else if (data[2] != 0)
+		pickedId = data[2] * 255 - 1;
+	std::cout << "Kolor: " << data[0] << ", " << data[1] << ", " << data[2] <<", pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
 	if (pickedId == objectId)
 	{
 		std::cout << "Wybrales: " << object.valueEnumToString() << std::endl;

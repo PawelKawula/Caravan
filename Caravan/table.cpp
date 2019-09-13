@@ -136,16 +136,16 @@ Table::Table(int width, int height, double scale, Table::CardConstructor & const
 			switch (suit)
 			{
 			case CardSuits::CLUBS:
-				color = glm::vec3((18 + 18 * rank) / 255.0f, 0, 0);
+				color = glm::vec3((18 + 18 * rank) / 255.0, 0, 0);
 				break;
 			case CardSuits::DIAMONDS:
-				color = glm::vec3(0, (19 + 18 * rank) / 255.0f, 0);
+				color = glm::vec3(0, (19 + 18 * rank) / 255.0, 0);
 				break;
 			case CardSuits::HEARTHS:
-				color = glm::vec3(0, 0, (20 + 18 * rank) / 255.0f);
+				color = glm::vec3(0, 0, (20 + 18 * rank) / 255.0);
 				break;
 			case CardSuits::SPADES:
-				color = glm::vec3((21 + 18 * rank) / 255.0f);
+				color = glm::vec3((21 + 18 * rank) / 255.0, (21 + 18 * rank) / 255.0, (21 + 18 * rank) / 255.0);
 				break;
 			}
 			//glm::vec2 position = glm::vec2(60 * rank, 70 * suit);
