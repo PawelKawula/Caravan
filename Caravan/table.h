@@ -8,6 +8,7 @@
 #include "game.h"
 #include "game_objects/card.h"
 #include "utilities/texture.h"
+#include "utilities/mouse_picker.h"
 #include <exception>
 
 typedef std::pair<std::string, Card> CardPair;
@@ -71,8 +72,8 @@ public:
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
 	std::vector<Card> & getPlayerCards(int i);
 
-	void processInput(GLfloat dt, SpriteRenderer * renderer);
-	void update(GLfloat dt);
+	void processInput(GLfloat dt);
+	void update(GLfloat dt, SpriteRenderer * renderer);
 	void render(SpriteRenderer * renderer);
 };
 

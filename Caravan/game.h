@@ -20,6 +20,7 @@ public:
 	int width;
 	int height;
 	GLboolean keys[1024];
+	GLboolean release[1024];
 	double scale;
 
 	Game(int width, int height, double scale)

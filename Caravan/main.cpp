@@ -12,19 +12,13 @@ const int WINDOW_HEIGHT = 600;
 
 GLFWwindow * window;
 Game caravan(WINDOW_WIDTH, WINDOW_HEIGHT, 1);
-extern std::map<CardRanks, std::map<CardSuits, Card>>	cards;
+extern std::map<CardRanks, std::map<CardSuits, Card>> cards;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
-struct {
-	CardRanks rank;
-	CardSuits suit;
-} selected;
-
 int main()
 {
-	selected = { CardRanks::ACE, CardSuits::CLUBS };
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -57,15 +51,18 @@ int main()
 		lastFrame = currentFrame;
 
 		glfwPollEvents();
-
+		
 		caravan.processInput(deltaTime);
-		if (caravan.state == GameState::GAME_ACTIVE)
-		{
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			caravan.update(deltaTime);
-			caravan.render();
-		}
+
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		caravan.update(deltaTime);		
+		caravan.render();
+
+		for (int i = 0; i < 1024; ++i)
+			caravan.release[i] = GL_FALSE;
+
 		glfwSwapBuffers(window);
 	}
 
@@ -83,9 +80,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
+		{
 			caravan.keys[key] = GL_TRUE;
+			caravan.release[key] = GL_FALSE;
+		}
 		else if (action == GLFW_RELEASE)
+		{
 			caravan.keys[key] = GL_FALSE;
+			caravan.release[key] = GL_TRUE;
+		}
+			
 	}
 }
 

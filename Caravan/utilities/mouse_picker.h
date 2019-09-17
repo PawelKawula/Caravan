@@ -10,16 +10,23 @@ class MousePicker
 {
 	glm::vec2 resolution;
 	glm::vec2 position;
-	GameObject &selectedObject;
+	Card &selectedObject;
+	bool focus;
 	Table & table;
 public:
 	std::map<CardRanks, std::map<CardSuits, int>> IDs;
 
-	MousePicker(int scrWidth, int scrHeight, GameObject & selectedObj, Table & table);
+	MousePicker(int scrWidth, int scrHeight, Card & selectedObj, Table & table);
 
 	glm::vec2 getPosition() const;
+	void setPosition(glm::vec2 position);
+	void setPosition(float x, float y);
+	bool getFocus() const;
+	void setFocus(bool focus);
 
-	void clickEvent(double xpos, double ypos);
+	void update();
+	void move();
+	void moveEvent(double xpos, double ypos);
 	bool checkSelection(Card & object);
 };
 

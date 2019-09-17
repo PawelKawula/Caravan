@@ -266,8 +266,15 @@ std::vector<Card>& Table::getPlayerCards(int i)
 	// TODO: insert return statement here
 }
 
-void Table::processInput(GLfloat dt, SpriteRenderer * renderer)
+void Table::processInput(GLfloat dt)
 {
+	
+}
+
+void Table::update(GLfloat dt, SpriteRenderer * renderer)
+{
+	//std::cout << "table.update()" << std::endl;
+	//std::cout << animatedObjectsStack.size() << std::endl;
 	cardStack.top().drawColor(renderer);
 
 	players[0].drawColor(renderer);
@@ -282,12 +289,6 @@ void Table::processInput(GLfloat dt, SpriteRenderer * renderer)
 		}
 		animatedObjectsStack.front().second->drawColor(renderer);
 	}
-}
-
-void Table::update(GLfloat dt)
-{
-	//std::cout << "table.update()" << std::endl;
-	//std::cout << animatedObjectsStack.size() << std::endl;
 
 	if (!this->animatedObjectsStack.empty())
 	{

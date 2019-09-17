@@ -1,8 +1,8 @@
 #include "mouse_picker.h"
 #include <iostream>
 
-MousePicker::MousePicker(int scrWidth, int scrHeight, GameObject & selectedObj, Table & table)
-	: position(-1, -1), resolution(scrWidth, scrHeight), selectedObject(selectedObj), table(table)
+MousePicker::MousePicker(int scrWidth, int scrHeight, Card & selectedObj, Table & table)
+	: position(-1, -1), resolution(scrWidth, scrHeight), selectedObject(selectedObj), focus(false), table(table)
 {
 	std::cout << "Lista id kart: ";
 	for (int rank = 0; rank < Table::RANKS_NUMBER; ++rank)
@@ -36,19 +36,47 @@ glm::vec2 MousePicker::getPosition() const
 	return this->position;
 }
 
-
-
-void MousePicker::clickEvent(double xpos, double ypos)
+void MousePicker::setPosition(glm::vec2 position)
 {
-	position.x = xpos;
-	position.y = ypos;
-	for (int i = 0; i < Table::PLAYERS_NUMBER; ++i)
+	this->position = position;
+}
+
+void MousePicker::setPosition(float x, float y)
+{
+	this->position.x = x;
+	this->position.y = y;
+}
+
+bool MousePicker::getFocus() const
+{
+	return focus;
+}
+
+void MousePicker::setFocus(bool focus)
+{
+	this->focus = focus;
+}
+
+void MousePicker::update()
+{
+	if (focus)
 	{
-		std::vector<Card> & hand = table.getPlayerCards(i);
-		for (auto card : hand)
-			checkSelection(card);
+		selectedObject.setPosition(this->position);
+	}
+	else
+	{
+		for (int i = 0; i < Table::PLAYERS_NUMBER; ++i)
+		{
+			std::vector<Card> & hand = table.getPlayerCards(i);
+			for (auto card : hand)
+				if (checkSelection(card))
+					this->selectedObject = card;
+		}
+
 	}
 }
+
+
 
 bool MousePicker::checkSelection(Card & object)
 {
@@ -61,13 +89,13 @@ bool MousePicker::checkSelection(Card & object)
 	int pickedId, objectId;
 	objectId = IDs[object.getRank()][object.getSuit()];
 	pickedId = data[0] * 255;
-	if (data[0] != 0 & data[1] != 0 && data[2] != 0)
+	if (data[0] != 0 && data[1] != 0 && data[2] != 0)
 		pickedId = pickedId - 1;
 	else if (data[1] != 0)
 		pickedId = data[1] * 255 + 2;
 	else if (data[2] != 0)
 		pickedId = data[2] * 255 - 1;
-	std::cout << "Kolor: " << data[0] << ", " << data[1] << ", " << data[2] <<", pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
+	// std::cout << "Kolor: " << data[0] << ", " << data[1] << ", " << data[2] <<", pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
 	if (pickedId == objectId)
 	{
 		std::cout << "Wybrales: " << object.valueEnumToString() << std::endl;
