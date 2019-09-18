@@ -8,8 +8,8 @@
 #include "game.h"
 #include "game_objects/card.h"
 #include "utilities/texture.h"
-#include "utilities/mouse_picker.h"
 #include <exception>
+#include "game_objects/player.h"
 
 typedef std::pair<std::string, Card> CardPair;
 typedef std::pair<std::string, Card*> CardPairPointer;
@@ -36,23 +36,22 @@ private:
 	CardConstructor cardConstructor;
 	class Player
 	{
+	public:
 		int hand;
 		std::string name;
 		std::vector<Card> cards;
-		Table & table;
-	public:
 		int getHandSize() const;
 		//CardPairPointer getCard(std::string name);
-		Player(Table & table, std::string name);
+		Player(std::string name);
 		bool gotCard(CardRanks rank, CardSuits suit) const;
-		bool addCard(CardRanks rank, CardSuits suit);
+		bool addCard(Card card);
 		bool removeCard(CardRanks rank, CardSuits suit);
 		Card& getCard(CardRanks rank, CardSuits suit);
 		Card& getCard(int index);
 		std::vector<Card> & getHand();
 		void draw(SpriteRenderer * renderer);
 		void drawColor(SpriteRenderer * renderer);
-	};
+	};	
 	struct Slot
 	{
 
@@ -71,9 +70,10 @@ public:
 	void tossCards();
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
 	std::vector<Card> & getPlayerCards(int i);
+	void moveCard(std::string name, glm::vec2 destination);
 
-	void processInput(GLfloat dt);
-	void update(GLfloat dt, SpriteRenderer * renderer);
+	void processInput(GLfloat dt, SpriteRenderer * renderer);
+	void update(GLfloat dt);
 	void render(SpriteRenderer * renderer);
 };
 

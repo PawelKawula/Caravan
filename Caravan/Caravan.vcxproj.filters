@@ -60,6 +60,9 @@
     <ClCompile Include="table.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_objects\player.cpp">
+      <Filter>Source Files\game_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="table.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects\player.h">
+      <Filter>Source Files\game_objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

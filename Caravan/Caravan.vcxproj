@@ -131,6 +131,7 @@
     <ClCompile Include="game_objects\card.cpp" />
     <ClCompile Include="game_objects\card_stack.cpp" />
     <ClCompile Include="game_objects\game_object.cpp" />
+    <ClCompile Include="game_objects\player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="table.cpp" />
     <ClCompile Include="utilities\mouse_picker.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="game_objects\card.h" />
     <ClInclude Include="game_objects\game_object.h" />
     <ClInclude Include="game_objects\card_stack.h" />
+    <ClInclude Include="game_objects\player.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="utilities\mouse_picker.h" />
     <ClInclude Include="utilities\resource_manager.h" />

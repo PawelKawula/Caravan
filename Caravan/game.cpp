@@ -52,12 +52,12 @@ void Game::init()
 	table = new Table(this->width, this->height, 1, cardConstructor, 4, "player1", "player2");
 	table->tossCards();
 	Card& firstCard = table->getPlayerCards(0)[0];
-	mousePicker = new MousePicker(this->width, this->height, firstCard, *table);
+	mousePicker = new MousePicker(this->width, this->height, *table);
 }
 
 void Game::update(GLfloat dt)
 {
-	table->update(dt, renderer);
+	table->update(dt);
 }
 
 void Game::render()
@@ -67,13 +67,22 @@ void Game::render()
 
 void Game::processInput(GLfloat dt)
 {
-	if (this->release[GLFW_KEY_SPACE] || mousePicker->getFocus())
+	table->processInput(dt, renderer);
+	if (state == GAME_ACTIVE)
 	{
-		mousePicker->update();
+		bool focus = mousePicker->getFocus();
+		std::string selectedObject = mousePicker->getSelectedObject();
+		if (this->keys[GLFW_KEY_SPACE])
+		{
+			mousePicker->update();
+			glm::vec2 position = mousePicker->getPosition();
+			if (focus)
+				table->moveCard(selectedObject, position);
+		}
 		if (this->release[GLFW_KEY_SPACE])
 		{
-			bool focus = mousePicker->getFocus();
-			mousePicker->setFocus(!focus);
+			mousePicker->setFocus(false);
+			this->release[GLFW_KEY_SPACE] = GL_FALSE;
 		}
 	}
 }

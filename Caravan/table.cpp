@@ -5,97 +5,7 @@
 #include <algorithm>
 #include <exception>
 
-int Table::Player::getHandSize() const
-{
-	return this->cards.size();
-}
 
-Table::Player::Player(Table & table, std::string name)
-	: table(table), name(name) {}
-
-bool Table::Player::gotCard(CardRanks rank, CardSuits suit) const
-{
-	//std::cout << "gotCard()" << std::endl;
-	for (auto card : this->cards)
-	{
-		return false;
-		if (card.getRank() == rank && card.getSuit() == suit)
-			return true;
-	}
-	return false;
-}
-
-bool Table::Player::addCard(CardRanks rank, CardSuits suit)
-{
-	//std::cout << "addCard()" << std::endl;
-	if (!this->gotCard(rank, suit))
-	{
-		this->cards.push_back(table.cards[rank][suit]);
-		return true;
-	}
-	else
-		return false;
-}
-
-bool Table::Player::removeCard(CardRanks rank, CardSuits suit)
-{
-	//std::cout << "removeCard()" << std::endl;
-	if (gotCard(rank, suit))
-	{
-		for (auto it = this->cards.begin(); it != this->cards.end(); ++it)
-		{
-			if (*it == table.cards[rank][suit])
-			{
-				this->cards.erase(it);
-				return true;
-			}
-		}				
-	}
-	return false;
-}
-
-Card& Table::Player::getCard(CardRanks rank, CardSuits suit)
-{
-	for (auto card : this->cards)
-		if (card == table.cards[rank][suit])
-			return card;
-}
-
-Card& Table::Player::getCard(int index)
-{
-	if (this->cards.size() > index)
-		return cards[index];
-}
-
-std::vector<Card>& Table::Player::getHand()
-{
-	return cards;
-	// TODO: insert return statement here
-}
-
-//std::shared_ptr<Card> Table::Player::getCard(CardRanks rank, CardSuits suit)
-//{
-//	std::cout << "getCard()" << std::endl;
-//	for (auto card : this->cards)
-//		if (*card == table.cards[rank][suit])
-//			return card;
-//}
-
-void Table::Player::draw(SpriteRenderer * renderer)
-{
-	for (auto card : this->cards)
-	{
-		//std::cout << "narysowano " << card.valueEnumToString() << std::endl;
-		card.draw(renderer);
-	}
-		
-}
-
-void Table::Player::drawColor(SpriteRenderer * renderer)
-{
-	for (auto card : cards)
-		card.drawColor(renderer);
-}
 
 //Table::Table(Game & game, Card & sampleCard)
 //{
@@ -122,7 +32,7 @@ void Table::Player::drawColor(SpriteRenderer * renderer)
 //}
 
 Table::Table(int width, int height, double scale, Table::CardConstructor & constructor, int hand, std::string name1, std::string name2)
-	: hand(hand), width(width), height(height), scale(scale), cardConstructor(constructor), players{Player(*this, name1), Player(*this, name2)}
+	: hand(hand), width(width), height(height), scale(scale), cardConstructor(constructor), players{Player(name1), Player(name2)}
 {
 	std::cout << "<!--Poczatek konstruktora--!>" << std::endl;
 	glm::vec2 position = glm::vec2(0.02 * this->width, 0.5 * (this->height - constructor.size.y * this->scale - this->height * 0.02));
@@ -192,7 +102,7 @@ bool Table::tossTopCardFromStack(Player & player)
 	std::cout << "Poczatek tossTopCardFromStack()" << std::endl;
 	if (this->cardStack.empty())
 		return false;
-	player.addCard(cardStack.top().getRank(), cardStack.top().getSuit());
+	player.addCard(cards[cardStack.top().getRank()][cardStack.top().getSuit()]);
 	this->cardStack.pop();
 	std::cout << "Koniec tossTopCardFromStack()" << std::endl;
  	return true;
@@ -247,7 +157,7 @@ bool Table::passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit)
 		if (!p2.gotCard(rank, suit))
 		{
 			p1.removeCard(rank, suit);
-			p2.addCard(rank, suit);
+			p2.addCard(cards[rank][suit]);
 			return true;
 		}
 		else
@@ -266,15 +176,34 @@ std::vector<Card>& Table::getPlayerCards(int i)
 	// TODO: insert return statement here
 }
 
-void Table::processInput(GLfloat dt)
+void Table::moveCard(std::string name, glm::vec2 destination)
 {
-	
+	if (name == cardStack.top().valueEnumToString())
+		std::cout << "Nie moge nic zrobic z karta ze stosu";
+	else
+	{
+		for (int i = 0; i < PLAYERS_NUMBER; ++i)
+		{
+			for (auto card : players[i].cards)
+			{
+				if (name == card.valueEnumToString())
+				{
+					glm::vec2 pos = card.getPosition();
+					std::cout << name << " - Wczesniej: " << pos.x << ", " << pos.y << "	";
+					card.setPosition(destination);
+					pos = card.getPosition();
+					std::cout << "Pozniej: " << pos.x << ", " << pos.y << std::endl;
+					return;
+				}
+			}
+				
+		}		//std::cout << "Przesuwam karte z " << position.x << ", " << position.y << " do " << destination.x << ", " << destination.y << std::endl;
+	}
+	std::cout << "Nie znaleziono takiej karty." << std::endl;
 }
 
-void Table::update(GLfloat dt, SpriteRenderer * renderer)
+void Table::processInput(GLfloat dt, SpriteRenderer * renderer)
 {
-	//std::cout << "table.update()" << std::endl;
-	//std::cout << animatedObjectsStack.size() << std::endl;
 	cardStack.top().drawColor(renderer);
 
 	players[0].drawColor(renderer);
@@ -290,6 +219,13 @@ void Table::update(GLfloat dt, SpriteRenderer * renderer)
 		animatedObjectsStack.front().second->drawColor(renderer);
 	}
 
+}
+
+void Table::update(GLfloat dt)
+{
+	//std::cout << "table.update()" << std::endl;
+	//std::cout << animatedObjectsStack.size() << std::endl;
+	
 	if (!this->animatedObjectsStack.empty())
 	{
 		std::pair<glm::vec2, Card*> animation = animatedObjectsStack.front();
@@ -327,7 +263,7 @@ void Table::render(SpriteRenderer * renderer)
 		//std::cout << "front: " << animatedObjectsStack.front().second->valueEnumToString() << std::endl;
 		//std::cout << *animatedObjectsStack.front().second << std::endl;
 	}
-		
+	players[0].getHand()[0].drawColor(renderer);
 	//players[0].draw(renderer);
 	//players[0].draw(renderer);
 }

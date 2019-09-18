@@ -1,8 +1,11 @@
 #include "mouse_picker.h"
 #include <iostream>
+#include "../game.h"
 
-MousePicker::MousePicker(int scrWidth, int scrHeight, Card & selectedObj, Table & table)
-	: position(-1, -1), resolution(scrWidth, scrHeight), selectedObject(selectedObj), focus(false), table(table)
+extern GLFWwindow * window;
+
+MousePicker::MousePicker(int scrWidth, int scrHeight, Table & table)
+	: position(-1, -1), resolution(scrWidth, scrHeight), focus(false), table(table)
 {
 	std::cout << "Lista id kart: ";
 	for (int rank = 0; rank < Table::RANKS_NUMBER; ++rank)
@@ -57,22 +60,33 @@ void MousePicker::setFocus(bool focus)
 	this->focus = focus;
 }
 
+std::string MousePicker::getSelectedObject()
+{
+	return selectedObject;
+}
+
 void MousePicker::update()
 {
-	if (focus)
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	this->position.x = xpos;
+	this->position.y = ypos;
+	if (!focus)
 	{
-		selectedObject.setPosition(this->position);
-	}
-	else
-	{
+		std::cout << "Wybieram nowa karte" << std::endl;
 		for (int i = 0; i < Table::PLAYERS_NUMBER; ++i)
 		{
 			std::vector<Card> & hand = table.getPlayerCards(i);
 			for (auto card : hand)
+			{
 				if (checkSelection(card))
-					this->selectedObject = card;
+				{
+					this->selectedObject = card.valueEnumToString();
+					this->focus = true;
+					return;
+				}
+			}
 		}
-
 	}
 }
 
