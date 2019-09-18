@@ -52,7 +52,7 @@ void Game::init()
 	table = new Table(this->width, this->height, 1, cardConstructor, 4, "player1", "player2");
 	table->tossCards();
 	Card& firstCard = table->getPlayerCards(0)[0];
-	mousePicker = new MousePicker(this->width, this->height, *table);
+	mousePicker = new MousePicker(this->width, this->height, firstCard, *table);
 }
 
 void Game::update(GLfloat dt)
@@ -70,14 +70,16 @@ void Game::processInput(GLfloat dt)
 	table->processInput(dt, renderer);
 	if (state == GAME_ACTIVE)
 	{
-		bool focus = mousePicker->getFocus();
-		std::string selectedObject = mousePicker->getSelectedObject();
 		if (this->keys[GLFW_KEY_SPACE])
 		{
+			bool focus = mousePicker->getFocus();
 			mousePicker->update();
+			std::cout << "Adres w game::processInput: " << &mousePicker->getSelectedObject() << std::endl;
 			glm::vec2 position = mousePicker->getPosition();
 			if (focus)
-				table->moveCard(selectedObject, position);
+				table->moveCard(mousePicker->getSelectedObject().valueEnumToString(), position);
+			//if (focus && (selectedCard = dynamic_cast<Card &>(&mousePicker->getSelectedObject())))
+				//table->moveCard(selectedObject.valueEnumToString(), position);
 		}
 		if (this->release[GLFW_KEY_SPACE])
 		{

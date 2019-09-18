@@ -32,8 +32,8 @@ public:
 
 	bool animate_slide(glm::vec2 pos, GLfloat dt);
 	bool animate_push(glm::vec2 pos, GLfloat dt);
-	void draw(SpriteRenderer * renderer);
-	void drawColor(SpriteRenderer * renderer);
+	virtual void draw(SpriteRenderer * renderer);
+	virtual void drawColor(SpriteRenderer * renderer);
 	void subDraw(SpriteRenderer * renderer, glm::vec2 offset, glm::vec2 subSize);
 	void subDrawColor(SpriteRenderer * renderer, glm::vec2 offset, glm::vec2 subSize);
 };

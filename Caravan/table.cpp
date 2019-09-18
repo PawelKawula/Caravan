@@ -184,15 +184,16 @@ void Table::moveCard(std::string name, glm::vec2 destination)
 	{
 		for (int i = 0; i < PLAYERS_NUMBER; ++i)
 		{
-			for (auto card : players[i].cards)
+			for (auto & card : players[i].cards)
 			{
 				if (name == card.valueEnumToString())
 				{
 					glm::vec2 pos = card.getPosition();
 					std::cout << name << " - Wczesniej: " << pos.x << ", " << pos.y << "	";
-					card.setPosition(destination);
+					card.animate_slide(destination, dt);
 					pos = card.getPosition();
 					std::cout << "Pozniej: " << pos.x << ", " << pos.y << std::endl;
+					std::cout << "Adres karty w Table::moveCard: " << &card << std::endl;
 					return;
 				}
 			}
