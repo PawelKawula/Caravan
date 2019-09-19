@@ -70,7 +70,7 @@ public:
 	void tossCards();
 	bool passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit);
 	std::vector<Card> & getPlayerCards(int i);
-	void moveCard(std::string name, glm::vec2 destination);
+	//void moveCard(std::string name, glm::vec2 destination);
 
 	void processInput(GLfloat dt, SpriteRenderer * renderer);
 	void update(GLfloat dt);

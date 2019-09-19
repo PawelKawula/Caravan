@@ -4,7 +4,7 @@
 
 extern GLFWwindow * window;
 
-MousePicker::MousePicker(int scrWidth, int scrHeight, Card & selectedObject, Table & table)
+MousePicker::MousePicker(int scrWidth, int scrHeight, Card * selectedObject, Table & table)
 	: position(-1, -1), resolution(scrWidth, scrHeight), selectedObject(selectedObject), focus(false), table(table)
 {
 	std::cout << "Lista id kart: ";
@@ -60,7 +60,7 @@ void MousePicker::setFocus(bool focus)
 	this->focus = focus;
 }
 
-Card & MousePicker::getSelectedObject()
+Card * MousePicker::getSelectedObject()
 {
 	return selectedObject;
 }
@@ -81,7 +81,8 @@ void MousePicker::update()
 			{
 				if (checkSelection(card))
 				{
-					this->selectedObject = card;
+					std::cout << "Wybrano: " << card.valueEnumToString() << ", adres: " << &card << std::endl;
+					this->selectedObject = &card;
 					this->focus = true;
 					std::cout << "Adres karty w mousePicker: " << &this->selectedObject << std::endl;
 					return;

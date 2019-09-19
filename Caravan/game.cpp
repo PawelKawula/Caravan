@@ -52,7 +52,7 @@ void Game::init()
 	table = new Table(this->width, this->height, 1, cardConstructor, 4, "player1", "player2");
 	table->tossCards();
 	Card& firstCard = table->getPlayerCards(0)[0];
-	mousePicker = new MousePicker(this->width, this->height, firstCard, *table);
+	mousePicker = new MousePicker(this->width, this->height, &firstCard, *table);
 }
 
 void Game::update(GLfloat dt)
@@ -74,10 +74,18 @@ void Game::processInput(GLfloat dt)
 		{
 			bool focus = mousePicker->getFocus();
 			mousePicker->update();
-			std::cout << "Adres w game::processInput: " << &mousePicker->getSelectedObject() << std::endl;
+			std::cout << "Adres w game::processInput: " << mousePicker->getSelectedObject() << std::endl;
 			glm::vec2 position = mousePicker->getPosition();
 			if (focus)
-				table->moveCard(mousePicker->getSelectedObject().valueEnumToString(), position);
+			{
+				glm::vec2 pos = mousePicker->getSelectedObject()->getPosition();
+				std::cout << "Najpierw: " << pos.x << ", " << pos.y << "	";
+				mousePicker->getSelectedObject()->animate_push(position, dt);
+				pos = mousePicker->getSelectedObject()->getPosition();
+				std::cout << "Potem: " << pos.x << ", " << pos.y << std::endl;
+			}
+				
+				//table->moveCard(mousePicker->getSelectedObject().valueEnumToString(), position);
 			//if (focus && (selectedCard = dynamic_cast<Card &>(&mousePicker->getSelectedObject())))
 				//table->moveCard(selectedObject.valueEnumToString(), position);
 		}
