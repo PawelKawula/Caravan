@@ -21,14 +21,17 @@
 SpriteRenderer				*renderer;
 MousePicker					*mousePicker;
 Table						*table;
-extern GLFWwindow*			window;
+extern GLFWwindow			*window;
 
 const int HAND_SIZE = 4;
 const float SCALE = 1;
 const glm::vec2 CARD_SIZE = glm::vec2(71, 95);
 std::map < CardRanks, std::map<CardSuits, Card>> cards;
 std::list<std::pair<glm::vec2, Card *>> animatedObjectsStack;
-std::stack<Card *> cardStack;
+
+Game::~Game()
+{
+}
 
 void Game::init()
 {
@@ -74,15 +77,12 @@ void Game::processInput(GLfloat dt)
 		{
 			bool focus = mousePicker->getFocus();
 			mousePicker->update();
-			std::cout << "Adres w game::processInput: " << mousePicker->getSelectedObject() << std::endl;
 			glm::vec2 position = mousePicker->getPosition();
 			if (focus)
 			{
 				glm::vec2 pos = mousePicker->getSelectedObject()->getPosition();
-				std::cout << "Najpierw: " << pos.x << ", " << pos.y << "	";
 				mousePicker->getSelectedObject()->animate_push(position, dt);
 				pos = mousePicker->getSelectedObject()->getPosition();
-				std::cout << "Potem: " << pos.x << ", " << pos.y << std::endl;
 			}
 				
 				//table->moveCard(mousePicker->getSelectedObject().valueEnumToString(), position);
@@ -93,6 +93,11 @@ void Game::processInput(GLfloat dt)
 		{
 			mousePicker->setFocus(false);
 			this->release[GLFW_KEY_SPACE] = GL_FALSE;
+		}
+		if (this->release[GLFW_KEY_R])
+		{
+			table->tossCards();
+			this->release[GLFW_KEY_R] = GL_FALSE;
 		}
 	}
 }

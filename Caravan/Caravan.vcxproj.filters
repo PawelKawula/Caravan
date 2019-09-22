@@ -63,6 +63,12 @@
     <ClCompile Include="game_objects\player.cpp">
       <Filter>Source Files\game_objects</Filter>
     </ClCompile>
+    <ClCompile Include="game_objects\slot.cpp">
+      <Filter>Source Files\game_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="game_objects\caravan.cpp">
+      <Filter>Source Files\game_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -96,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="game_objects\player.h">
+      <Filter>Source Files\game_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects\slot.h">
+      <Filter>Source Files\game_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects\caravan.h">
       <Filter>Source Files\game_objects</Filter>
     </ClInclude>
   </ItemGroup>

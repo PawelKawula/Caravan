@@ -34,28 +34,7 @@ private:
 	int height;
 	double scale;
 	CardConstructor cardConstructor;
-	class Player
-	{
-	public:
-		int hand;
-		std::string name;
-		std::vector<Card> cards;
-		int getHandSize() const;
-		//CardPairPointer getCard(std::string name);
-		Player(std::string name);
-		bool gotCard(CardRanks rank, CardSuits suit) const;
-		bool addCard(Card card);
-		bool removeCard(CardRanks rank, CardSuits suit);
-		Card& getCard(CardRanks rank, CardSuits suit);
-		Card& getCard(int index);
-		std::vector<Card> & getHand();
-		void draw(SpriteRenderer * renderer);
-		void drawColor(SpriteRenderer * renderer);
-	};	
-	struct Slot
-	{
-
-	};
+	
 	Player players[PLAYERS_NUMBER];
 	std::map<CardRanks, std::map<CardSuits, Card>> cards;
 	std::stack<Card> cardStack;

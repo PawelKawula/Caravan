@@ -7,7 +7,6 @@ extern GLFWwindow * window;
 MousePicker::MousePicker(int scrWidth, int scrHeight, Card * selectedObject, Table & table)
 	: position(-1, -1), resolution(scrWidth, scrHeight), selectedObject(selectedObject), focus(false), table(table)
 {
-	std::cout << "Lista id kart: ";
 	for (int rank = 0; rank < Table::RANKS_NUMBER; ++rank)
 	{
 		for (int suit = 0; suit < Table::SUITS_NUMBER; ++suit)
@@ -28,7 +27,6 @@ MousePicker::MousePicker(int scrWidth, int scrHeight, Card * selectedObject, Tab
 				id = 21 + 18 * rank;
 				break;
 			}
-			std::cout << Card::RanksNamesEng[rank] << " " << Card::SuitsNamesEng[suit] << id << std::endl;
 			IDs[CardRanks(rank)][CardSuits(suit)] = id;
 		}
 	}
@@ -60,7 +58,7 @@ void MousePicker::setFocus(bool focus)
 	this->focus = focus;
 }
 
-Card * MousePicker::getSelectedObject()
+GameObject * MousePicker::getSelectedObject()
 {
 	return selectedObject;
 }
@@ -73,7 +71,6 @@ void MousePicker::update()
 	this->position.y = ypos;
 	if (!focus)
 	{
-		std::cout << "Wybieram nowa karte" << std::endl;
 		for (int i = 0; i < Table::PLAYERS_NUMBER; ++i)
 		{
 			std::vector<Card> & hand = table.getPlayerCards(i);
@@ -81,10 +78,8 @@ void MousePicker::update()
 			{
 				if (checkSelection(card))
 				{
-					std::cout << "Wybrano: " << card.valueEnumToString() << ", adres: " << &card << std::endl;
 					this->selectedObject = &card;
 					this->focus = true;
-					std::cout << "Adres karty w mousePicker: " << &this->selectedObject << std::endl;
 					return;
 				}
 			}
@@ -94,7 +89,7 @@ void MousePicker::update()
 
 
 
-bool MousePicker::checkSelection(Card & object)
+bool MousePicker::checkSelection(GameObject & object)
 {
 	glFlush();
 	glFinish();
@@ -113,9 +108,6 @@ bool MousePicker::checkSelection(Card & object)
 		pickedId = data[2] * 255 - 1;
 	// std::cout << "Kolor: " << data[0] << ", " << data[1] << ", " << data[2] <<", pickedId: " << pickedId << ", objectId: " << objectId << std::endl;
 	if (pickedId == objectId)
-	{
-		std::cout << "Wybrales: " << object.valueEnumToString() << std::endl;
 		return true;
-	}
 	return false;
 }

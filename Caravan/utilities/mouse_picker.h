@@ -23,12 +23,10 @@ public:
 	void setPosition(float x, float y);
 	bool getFocus() const;
 	void setFocus(bool focus);
-	Card * getSelectedObject();
+	GameObject * getSelectedObject();
 
 	void update();
-	void move();
-	void moveEvent(double xpos, double ypos);
-	bool checkSelection(Card & object);
+	bool checkSelection(GameObject & object);
 };
 
 extern MousePicker *mousePicker;

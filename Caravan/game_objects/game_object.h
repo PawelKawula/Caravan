@@ -8,7 +8,6 @@
 
 class GameObject
 {
-protected:
 	glm::vec2	size, position, velocity;
 	glm::vec3	color;
 	GLfloat		rotation;

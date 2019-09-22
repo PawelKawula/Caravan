@@ -90,7 +90,8 @@ bool Table::tossTopCardFromStack(Player & player)
 {
 	if (this->cardStack.empty())
 		return false;
-	player.addCard(cards[cardStack.top().getRank()][cardStack.top().getSuit()]);
+	if (!player.addCard(cards[cardStack.top().getRank()][cardStack.top().getSuit()]))
+		return false;
 	this->cardStack.pop();
  	return true;
 }
@@ -98,6 +99,10 @@ bool Table::tossTopCardFromStack(Player & player)
 void Table::tossCards()
 {
 	glm::vec2 cardSize = cardConstructor.size;
+
+	for (int i = 0; i < PLAYERS_NUMBER; ++i)
+		players[i].reset();
+
 	for (int i = 0; i < hand; ++i)
 	{
 		if (!this->tossTopCardFromStack(players[0]))
@@ -115,7 +120,6 @@ void Table::tossCards()
 		{
 			animation = &players[0].getCard(i);
 			this->animatedObjectsStack.push_back(std::pair<glm::vec2, Card*>(position, animation));
-
 		}
 		if (i < this->players[1].getHandSize())
 		{
@@ -125,6 +129,14 @@ void Table::tossCards()
 		}
 	}
 	std::cout << cardStack.size() << std::endl;
+	for (int i = 0; i < PLAYERS_NUMBER; ++i)
+	{
+		std::cout << "Gracz " << i + 1 << ": ";
+		for (int j = 0; j < players[i].getHandSize(); ++j)
+			std::cout << players[i].getCard(j).valueEnumToString() << ", " << std::endl;
+		std::cout << "\b\b\n";
+	}
+		
 }
 
 bool Table::passCard(Player & p1, Player & p2, CardRanks rank, CardSuits suit)
@@ -208,7 +220,6 @@ void Table::update(GLfloat dt)
 			animatedObjectsStack.pop_front();
 		}
 	}
-	std::cout << "Adres damy: " << &players[0].getHand()[1] << std::endl;
 }
 
 void Table::render(SpriteRenderer * renderer)

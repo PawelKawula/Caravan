@@ -25,6 +25,7 @@ public:
 
 	Game(int width, int height, double scale)
 		: width(width), height(height), scale(scale) {}
+	~Game();
 	void init();
 	void update(GLfloat dt);
 	void render();

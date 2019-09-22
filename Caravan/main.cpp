@@ -16,6 +16,7 @@ extern std::map<CardRanks, std::map<CardSuits, Card>> cards;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 int main()
 {
@@ -28,6 +29,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -36,6 +38,7 @@ int main()
 
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_STENCIL_TEST);
 
 	caravan.init();
 
@@ -91,6 +94,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 			
 	}
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

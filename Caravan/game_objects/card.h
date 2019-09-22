@@ -10,11 +10,12 @@ enum CardRanks
 	FIVE, SIX, SEVEN,
 	EIGHT, NINE, TEN,
 	WALET, QUEEN, KING,
+	NONE
 };
 
 enum CardSuits
 {
-	CLUBS, HEARTHS, SPADES, DIAMONDS
+	CLUBS, HEARTHS, SPADES, DIAMONDS, NONE
 };
 
 
@@ -25,21 +26,23 @@ class Card : public GameObject
 	CardRanks rank;
 	CardSuits suit;
 public:
-	static std::string RanksNames[13];
-	static std::string SuitsNames[4];
-	static std::string RanksNamesEng[13];
-	static std::string SuitsNamesEng[4];
+	static std::string RanksNames[14];
+	static std::string SuitsNames[5];
+	static std::string RanksNamesEng[14];
+	static std::string SuitsNamesEng[5];
 
 	glm::vec2 getOffset() const;
 	glm::vec2 getSubSize() const;
 	CardRanks getRank() const;
 	CardSuits getSuit() const;
+	int getValue() const;
+	bool isActionCard() const;
 
 	Card(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec2 offset, glm::vec2 subSize, CardRanks val, CardSuits sign, glm::vec3 color = glm::vec3(1.0f));
 	Card();
 
 	bool operator==(const Card & card);
-
+	bool operator!=(const Card & card);
 	const std::string valueEnumToString() const;
 
 	void draw(SpriteRenderer * renderer);
